@@ -1,0 +1,110 @@
+name: MobileClaw Daily
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    # 07:17 Beijing time (UTC+8). GitHub cron uses UTC.
+    - cron: "17 23 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobileclaw-daily
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TZ: Asia/Shanghai
+      PYTHONUTF8: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt "ruff>=0.6,<1"
+
+      - name: Run unit tests
+        run: python -m unittest discover -s tests -v
+
+      - name: Compile Python files
+        run: python -m compileall -q .
+
+      - name: Ruff check
+        run: python -m ruff check mobileclaw_daily.py tests
+
+  claim:
+    if: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      TZ: Asia/Shanghai
+      PYTHONUTF8: "1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run MobileClaw
+        env:
+          MOBILECLAW_TOKENS: ${{ secrets.MOBILECLAW_TOKENS }}
+          MOBILECLAW_TOKEN: ${{ secrets.MOBILECLAW_TOKEN }}
+        shell: bash
+        run: |
+          set -o pipefail
+          python mobileclaw_daily.py | tee mobileclaw-report.jsonl
+
+      - name: Build JSON report
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          raw_path = Path("mobileclaw-report.jsonl")
+          output_path = Path("mobileclaw-report.json")
+          records = []
+          if raw_path.exists():
+              for line in raw_path.read_text(encoding="utf-8").splitlines():
+                  if line.strip():
+                      records.append(json.loads(line))
+          output_path.write_text(
+              json.dumps(records, ensure_ascii=False, indent=2) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Upload JSON report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mobileclaw-report-${{ github.run_id }}
+          path: |
+            mobileclaw-report.json
+            mobileclaw-report.jsonl
+          if-no-files-found: warn
+          retention-days: 30
