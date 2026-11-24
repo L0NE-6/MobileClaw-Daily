@@ -99,6 +99,7 @@ python mobileclaw_daily.py --status
 
 The included workflow runs tests on every push to `main`. One scheduled run
 per day performs tests, claims tokens, and uploads the JSON report artifact.
+If no credential Secret is configured, the scheduled claim is skipped with an explicit notice; configured runs still fail on script errors.
 
 | Secret | Required | Value |
 | :--- | :---: | :--- |

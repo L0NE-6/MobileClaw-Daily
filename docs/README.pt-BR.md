@@ -98,6 +98,7 @@ python mobileclaw_daily.py --status
 
 O workflow executa testes em cada push para `main`. Uma execução diária agenda
 testes, claim e upload do relatório JSON como artifact.
+Sem um Secret de credenciais configurado, o claim agendado é ignorado com um notice SKIPPED explícito; depois que as credenciais existirem, falhas do script continuam sendo falhas.
 
 | Secret | Obrigatório | Valor |
 | :--- | :---: | :--- |

@@ -6,7 +6,7 @@
 
 **MobileClaw 每日 Token 福利 · 多账号领取 · status → claim → status / credits 回读**
 
-> 当前版本：**v1.0.0**（2026-11-23） · 独立仓库首版 · 单文件自包含 · 不以内网或 HTTP 200 冒充成功
+> 当前版本：**v1.0.1**（2026-11-24） · 独立仓库维护版 · 单文件自包含 · 不以内网或 HTTP 200 冒充成功
 
 [简体中文](README.md) · [English](docs/README.en.md) · [繁體中文](docs/README.zh-Hant.md) · [日本語](docs/README.ja.md) · [한국어](docs/README.ko.md) · [Português (BR)](docs/README.pt-BR.md)
 
@@ -232,6 +232,8 @@ python mobileclaw_daily.py
 | `schedule` | 每天一次：先跑测试，再执行领取并上传报告 artifact |
 | `workflow_dispatch` | 手动执行同一套测试与领取流程 |
 
+未配置 `MOBILECLAW_TOKENS` / `MOBILECLAW_TOKEN` 时，定时领取会输出明确 SKIPPED notice 并成功结束；配置凭据后，脚本异常仍会保持失败状态。
+
 ### Secrets
 
 进入 **Settings → Secrets and variables → Actions**，按需添加：
@@ -428,7 +430,7 @@ MobileClaw-Daily/
 
 ## 📦 版本与发布
 
-- 当前版本：`v1.0.0`（2026-11-23）；
+- 当前版本：`v1.0.1`（2026-11-24）；
 - 本仓库首版不创建远端、不创建 tag、不创建 Release；
 - 后续每次实质更新单独发布版本，历史版本保留；
 - 公开包不得包含凭据、手机号、Cookie、JWT、运行日志或本机路径。

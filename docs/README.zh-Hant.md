@@ -89,6 +89,7 @@ python mobileclaw_daily.py --status
 ## GitHub Actions
 
 工作流在 `main` 分支 push 時執行測試；每日排程會先測試，再領取並上傳 JSON 報告 artifact。
+未設定憑據 Secret 時，定時領取會輸出明確 SKIPPED notice 並成功結束；設定憑據後，腳本異常仍會保持失敗狀態。
 
 | Secret | 必填 | 值 |
 | :--- | :---: | :--- |

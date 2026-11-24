@@ -89,6 +89,7 @@ python mobileclaw_daily.py --status
 ## GitHub Actions
 
 `main` push에서는 테스트를 실행합니다. 일일 예약 실행은 테스트 후 혜택을 받고 JSON 보고서 artifact를 업로드합니다.
+인증 정보 Secret이 없으면 예약 수령은 명시적인 SKIPPED notice를 남기고 정상 종료합니다. 인증 정보가 설정된 뒤에는 스크립트 오류를 계속 실패로 처리합니다.
 
 | Secret | 필수 | 값 |
 | :--- | :---: | :--- |

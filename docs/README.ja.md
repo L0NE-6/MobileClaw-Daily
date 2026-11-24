@@ -89,6 +89,7 @@ python mobileclaw_daily.py --status
 ## GitHub Actions
 
 `main` への push ではテストを実行します。毎日のスケジュールではテスト後に受取を実行し、JSON レポート artifact をアップロードします。
+認証情報 Secret が未設定の場合、定時受取は明示的な SKIPPED notice を出して正常終了します。認証情報を設定した後は、スクリプトの異常終了を失敗として扱います。
 
 | Secret | 必須 | 値 |
 | :--- | :---: | :--- |

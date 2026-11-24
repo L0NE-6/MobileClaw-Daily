@@ -68,7 +68,23 @@ jobs:
       - name: Install dependencies
         run: python -m pip install -r requirements.txt
 
+      - name: Check credentials
+        id: credentials
+        shell: bash
+        env:
+          MOBILECLAW_TOKENS: ${{ secrets.MOBILECLAW_TOKENS }}
+          MOBILECLAW_TOKEN: ${{ secrets.MOBILECLAW_TOKEN }}
+        run: |
+          if [ -n "${MOBILECLAW_TOKENS:-}" ] || [ -n "${MOBILECLAW_TOKEN:-}" ]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+            echo "::notice title=MobileClaw Daily::Credentials detected."
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=MobileClaw Daily::No MOBILECLAW_TOKENS or MOBILECLAW_TOKEN configured; scheduled claim skipped."
+          fi
+
       - name: Run MobileClaw
+        if: steps.credentials.outputs.available == 'true'
         env:
           MOBILECLAW_TOKENS: ${{ secrets.MOBILECLAW_TOKENS }}
           MOBILECLAW_TOKEN: ${{ secrets.MOBILECLAW_TOKEN }}
@@ -78,7 +94,7 @@ jobs:
           python mobileclaw_daily.py | tee mobileclaw-report.jsonl
 
       - name: Build JSON report
-        if: always()
+        if: always() && steps.credentials.outputs.available == 'true'
         shell: bash
         run: |
           python - <<'PY'
@@ -99,7 +115,7 @@ jobs:
           PY
 
       - name: Upload JSON report
-        if: always()
+        if: always() && steps.credentials.outputs.available == 'true'
         uses: actions/upload-artifact@v4
         with:
           name: mobileclaw-report-${{ github.run_id }}
