@@ -20,7 +20,7 @@
 <img src="https://img.shields.io/badge/License-MIT-F472B6?style=for-the-badge" />
 <a href="https://github.com/L0NE-6/MobileClaw-Daily/releases"><img src="https://img.shields.io/badge/%E2%AC%87%20Download-Releases-2ea44f?style=for-the-badge&logo=github" /></a>
 
-[✨ 30 秒速览](#quick-overview) · [🔐 凭据格式](#credentials) · [🚀 青龙部署](#qinglong) · [☁️ GitHub Actions](#actions) · [⌨️ 命令行](#cli) · [✅ 成功判据](#success) · [🚫 使用边界](#usage-policy) · [✦ 星轨](#star-trail)
+[✨ 30 秒速览](#quick-overview) · [🔐 凭据格式](#credentials) · [🚀 青龙部署](#qinglong) · [☁️ GitHub Actions](#actions) · [⌨️ 命令行](#cli) · [✅ 成功判据](#success) · [🧠 设计原则](#design) · [📁 目录结构](#directory) · [🚫 使用边界](#usage-policy) · [✦ 星轨](#star-trail)
 
 </div>
 
